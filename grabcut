@@ -1,0 +1,26 @@
+# Example using the OpenCV library and the GrabCut algorithm for image segmentation
+import cv2
+import numpy as np
+
+# Load the image
+image = cv2.imread('image.jpg')
+
+# Create a mask for the background
+mask = np.zeros(image.shape[:2], np.uint8)
+
+# Define the rectangle region for foreground extraction
+rectangle = (50, 50, 450, 290)
+
+# Apply GrabCut algorithm to segment the image
+cv2.grabCut(image, mask, rectangle, None, None, 5, cv2.GC_INIT_WITH_RECT)
+
+# Create a mask for the foreground and background
+mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+
+# Apply the mask to the original image
+segmented_image = image * mask2[:, :, np.newaxis]
+
+# Display the segmented image
+cv2.imshow('Segmented Image', segmented_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
